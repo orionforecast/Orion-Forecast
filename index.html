@@ -1,647 +1,183 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ORION FORECAST | Astro Finance</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orion Forecast — Where the cosmos meets the market</title>
+<meta name="description" content="Orion Forecast: traders, analysts and researchers in the market using esoteric techniques. Weekly outlook, educational content and premium forecasts for BTC, EUR/USD, ES and Gold.">
+<meta property="og:title" content="Orion Forecast">
+<meta property="og:description" content="Where the cosmos meets the market.">
+<meta property="og:image" content="assets/orion-icon.png">
+<link rel="icon" type="image/png" href="assets/orion-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --black: #060608;
-    --deep: #0b0d10;
-    --surface: #111318;
-    --card: #161a20;
-    --border: rgba(255,255,255,0.07);
-    --border-bright: rgba(255,255,255,0.14);
-    --gold: #c8a97e;
-    --gold-dim: #8f7456;
-    --gold-glow: rgba(200,169,126,0.10);
-    --text: #e8e4de;
-    --muted: #7a7670;
-    --dim: #3a3830;
-    --mono: 'Space Mono', monospace;
-    --sans: 'Space Grotesk', sans-serif;
-  }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--black);
-    color: var(--text);
-    font-family: var(--sans);
-    font-size: 16px;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-
-  /* STAR FIELD */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      radial-gradient(1px 1px at 8%  12%, rgba(255,255,255,0.55) 0%, transparent 100%),
-      radial-gradient(1px 1px at 23% 34%, rgba(255,255,255,0.30) 0%, transparent 100%),
-      radial-gradient(1px 1px at 38%  8%, rgba(255,255,255,0.40) 0%, transparent 100%),
-      radial-gradient(1px 1px at 54% 61%, rgba(255,255,255,0.25) 0%, transparent 100%),
-      radial-gradient(1px 1px at 71% 22%, rgba(255,255,255,0.45) 0%, transparent 100%),
-      radial-gradient(1px 1px at 85% 47%, rgba(255,255,255,0.30) 0%, transparent 100%),
-      radial-gradient(1px 1px at 92%  5%, rgba(255,255,255,0.50) 0%, transparent 100%),
-      radial-gradient(1px 1px at 14% 78%, rgba(255,255,255,0.35) 0%, transparent 100%),
-      radial-gradient(1px 1px at 47% 89%, rgba(255,255,255,0.28) 0%, transparent 100%),
-      radial-gradient(1px 1px at 66% 73%, rgba(255,255,255,0.38) 0%, transparent 100%),
-      radial-gradient(1px 1px at 79% 91%, rgba(255,255,255,0.22) 0%, transparent 100%),
-      radial-gradient(1px 1px at 32% 55%, rgba(255,255,255,0.18) 0%, transparent 100%),
-      radial-gradient(1px 1px at 59% 38%, rgba(255,255,255,0.32) 0%, transparent 100%),
-      radial-gradient(1.5px 1.5px at 90% 80%, rgba(200,169,126,0.5) 0%, transparent 100%),
-      radial-gradient(1.5px 1.5px at 5%  50%, rgba(200,169,126,0.4) 0%, transparent 100%),
-      radial-gradient(1.5px 1.5px at 43% 18%, rgba(200,169,126,0.35) 0%, transparent 100%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.25rem 3rem;
-    border-bottom: 1px solid var(--border);
-    background: rgba(6,6,8,0.88);
-    backdrop-filter: blur(14px);
-  }
-
-  .nav-logo {
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    color: var(--gold);
-    text-decoration: none;
-    text-transform: uppercase;
-  }
-
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 2.5rem;
-    list-style: none;
-  }
-
-  .nav-links a {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    color: var(--muted);
-    text-decoration: none;
-    text-transform: uppercase;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--gold); }
-
-  .nav-socials {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-  }
-
-  .nav-social-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--muted);
-    transition: color 0.2s;
-    width: 20px;
-    height: 20px;
-  }
-  .nav-social-link:hover { color: var(--gold); }
-  .nav-social-link svg { width: 16px; height: 16px; fill: currentColor; }
-
-  /* HERO */
-  .hero {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 8rem 2rem 6rem;
-    z-index: 1;
-  }
-
-  .hero-eyebrow {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.28em;
-    color: var(--gold-dim);
-    text-transform: uppercase;
-    margin-bottom: 2.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  .hero-eyebrow::before,
-  .hero-eyebrow::after {
-    content: '';
-    display: block;
-    width: 48px;
-    height: 1px;
-    background: var(--gold-dim);
-  }
-
-  .hero-title {
-    font-family: var(--mono);
-    font-size: clamp(3.5rem, 10vw, 8rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 0.88;
-    color: var(--text);
-    margin-bottom: 0.5rem;
-  }
-  .hero-title span { color: var(--gold); }
-
-  .hero-subtitle-word {
-    font-family: var(--mono);
-    font-size: clamp(0.85rem, 2vw, 1.1rem);
-    font-weight: 400;
-    letter-spacing: 0.38em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 3rem;
-  }
-
-  .hero-desc {
-    max-width: 540px;
-    font-size: 15px;
-    color: var(--muted);
-    line-height: 1.85;
-    margin-bottom: 3.5rem;
-  }
-
-  .hero-ctas {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .btn-primary {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: var(--black);
-    background: var(--gold);
-    padding: 0.9rem 2.4rem;
-    border: none;
-    cursor: pointer;
-    transition: opacity 0.2s, transform 0.15s;
-    display: inline-block;
-  }
-  .btn-primary:hover { opacity: 0.82; transform: translateY(-1px); }
-
-  .btn-secondary {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: var(--muted);
-    background: transparent;
-    padding: 0.9rem 2.4rem;
-    border: 1px solid var(--border-bright);
-    cursor: pointer;
-    transition: color 0.2s, border-color 0.2s, transform 0.15s;
-    display: inline-block;
-  }
-  .btn-secondary:hover { color: var(--text); border-color: var(--gold); transform: translateY(-1px); }
-
-  /* DIVIDER */
-  .section-divider {
-    width: 100%;
-    height: 1px;
-    background: var(--border);
-  }
-
-  /* SECTION */
-  section {
-    position: relative;
-    z-index: 1;
-    padding: 7rem 3rem;
-  }
-
-  .section-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.24em;
-    color: var(--gold-dim);
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-  }
-
-  .section-title {
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
-    font-weight: 600;
-    line-height: 1.1;
-    color: var(--text);
-    margin-bottom: 1rem;
-  }
-
-  /* ABOUT */
-  #about {
-    background: var(--deep);
-    text-align: center;
-  }
-
-  .about-simple {
-    max-width: 760px;
-    margin: 0 auto;
-  }
-
-  .about-statement {
-    font-family: var(--mono);
-    font-size: clamp(1.3rem, 3vw, 2rem);
-    font-weight: 400;
-    line-height: 1.5;
-    color: var(--text);
-  }
-
-  /* CHANNELS */
-  #channels {
-    background: var(--black);
-    text-align: center;
-  }
-
-  .channels-header {
-    max-width: 600px;
-    margin: 0 auto 4rem;
-  }
-
-  .channels-header .section-sub {
-    font-size: 15px;
-    color: var(--muted);
-    line-height: 1.8;
-    margin-top: 0.75rem;
-  }
-
-  .channels-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--border);
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  .channel-card {
-    background: var(--card);
-    padding: 3rem 2.5rem;
-    text-align: left;
-    transition: background 0.2s;
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-    text-decoration: none;
-    color: inherit;
-  }
-  .channel-card:hover { background: #1c2028; }
-
-  .channel-icon {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--border-bright);
-    color: var(--gold-dim);
-  }
-  .channel-icon svg { width: 18px; height: 18px; fill: currentColor; }
-
-  .channel-platform {
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.22em;
-    color: var(--gold-dim);
-    text-transform: uppercase;
-  }
-
-  .channel-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.2;
-  }
-
-  .channel-desc {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.7;
-    flex: 1;
-  }
-
-  .channel-cta {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    color: var(--gold-dim);
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: color 0.2s;
-  }
-  .channel-card:hover .channel-cta { color: var(--gold); }
-  .channel-cta::after { content: '→'; }
-
-  /* PREMIUM */
-  #premium {
-    background: var(--deep);
-    text-align: center;
-  }
-
-  .premium-inner {
-    max-width: 720px;
-    margin: 0 auto;
-  }
-
-  .premium-box {
-    border: 1px solid var(--gold-dim);
-    background: var(--gold-glow);
-    padding: 4rem 3rem;
-    margin-top: 3rem;
-    position: relative;
-  }
-
-  .premium-badge {
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--black);
-    background: var(--gold);
-    padding: 4px 14px;
-    position: absolute;
-    top: -11px;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-  }
-
-  .premium-title {
-    font-size: 1.6rem;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 1rem;
-  }
-
-  .premium-desc {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.85;
-    margin-bottom: 2.5rem;
-    max-width: 520px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .premium-features {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    margin-bottom: 2.5rem;
-    text-align: left;
-  }
-
-  .premium-feature {
-    background: var(--card);
-    padding: 1.5rem 1rem;
-    text-align: center;
-  }
-
-  .premium-feature-title {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    color: var(--gold-dim);
-    text-transform: uppercase;
-  }
-
-  /* CONTACT */
-  #contact {
-    background: var(--black);
-    text-align: center;
-  }
-
-  .contact-inner {
-    max-width: 560px;
-    margin: 0 auto;
-  }
-
-  .contact-email {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-family: var(--mono);
-    font-size: clamp(13px, 2.5vw, 16px);
-    letter-spacing: 0.06em;
-    color: var(--gold);
-    text-decoration: none;
-    border: 1px solid var(--border-bright);
-    padding: 1rem 2rem;
-    margin-top: 2rem;
-    transition: border-color 0.2s, background 0.2s;
-  }
-  .contact-email:hover { border-color: var(--gold); background: var(--gold-glow); }
-  .contact-email svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
-
-  .contact-sub {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.8;
-  }
-
-  /* DISCLAIMER */
-  #disclaimer {
-    background: var(--deep);
-    border-top: 1px solid var(--border);
-  }
-
-  .disclaimer-inner {
-    max-width: 640px;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  .disclaimer-text {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.85;
-    margin-bottom: 1.5rem;
-  }
-
-  .disclaimer-link {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    text-decoration: none;
-    border: none;
-    border-bottom: 1px solid var(--gold-dim);
-    padding-bottom: 1px;
-    transition: color 0.2s, border-color 0.2s;
-    cursor: pointer;
-    background: none;
-  }
-  .disclaimer-link:hover { color: var(--gold); border-color: var(--gold); }
-
-  /* FOOTER */
-  footer {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.5rem 3rem;
-    border-top: 1px solid var(--border);
-    background: var(--black);
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .footer-logo {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    color: var(--gold);
-    text-transform: uppercase;
-  }
-
-  .footer-socials {
-    display: flex;
-    align-items: center;
-    gap: 1.4rem;
-  }
-
-  .footer-social {
-    color: var(--muted);
-    transition: color 0.2s;
-    display: flex;
-    align-items: center;
-  }
-  .footer-social:hover { color: var(--gold); }
-  .footer-social svg { width: 15px; height: 15px; fill: currentColor; }
-
-  .footer-copy {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    color: var(--dim);
-    text-transform: uppercase;
-  }
-
-  /* LEGAL MODAL */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(6,6,8,0.93);
-    z-index: 200;
-    overflow-y: auto;
-    padding: 4rem 2rem;
-  }
-  .modal-overlay.active { display: block; }
-
-  .modal-box {
-    max-width: 700px;
-    margin: 0 auto;
-    background: var(--card);
-    border: 1px solid var(--border-bright);
-    padding: 3rem;
-    position: relative;
-  }
-
-  .modal-close {
-    position: absolute;
-    top: 1.5rem; right: 1.5rem;
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-    background: none;
-    border: 1px solid var(--border-bright);
-    padding: 0.4rem 1rem;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: color 0.2s;
-  }
-  .modal-close:hover { color: var(--text); }
-
-  .modal-title {
-    font-family: var(--mono);
-    font-size: 13px;
-    letter-spacing: 0.14em;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 2rem;
-    padding-right: 6rem;
-  }
-
-  .modal-content h2 {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: 0.1em;
-    margin: 1.5rem 0 0.5rem;
-    text-transform: uppercase;
-    font-family: var(--mono);
-  }
-  .modal-content p {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.8;
-    margin-bottom: 0.5rem;
-  }
-  .modal-content strong { color: var(--text); }
-
-  /* SCROLL REVEAL */
-  .reveal {
-    opacity: 0;
-    transform: translateY(22px);
-    transition: opacity 0.65s ease, transform 0.65s ease;
-  }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-
-  /* RESPONSIVE */
-  @media (max-width: 860px) {
-    nav { padding: 1rem 1.5rem; }
-    .nav-links { display: none; }
-    section { padding: 5rem 1.5rem; }
-    .channels-grid { grid-template-columns: 1fr; }
-    .premium-features { grid-template-columns: 1fr; }
-    .premium-box { padding: 3rem 1.5rem; }
-    footer { flex-direction: column; align-items: flex-start; }
-  }
+html{scroll-behavior:smooth}
+body{margin:0;background:#f4f0e8}
+a{color:inherit} a:hover{opacity:0.85}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(23,21,15,0.55);z-index:50;overflow-y:auto;padding:40px 16px}
+.modal-overlay.active{display:block}
+.modal-box{max-width:760px;margin:0 auto;background:#fbf8f2;border:1px solid #b98e5a;padding:40px 32px;font-family:'Space Grotesk',system-ui,sans-serif;color:#17150f}
+.modal-close{float:right;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;background:none;border:1px solid rgba(23,21,15,0.22);color:#17150f;padding:10px 14px;cursor:pointer}
+.modal-title{font-family:'Space Mono',monospace;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#8a5a23;margin:0 0 24px}
+.modal-content p{font-size:15px;line-height:1.75;color:#5e584c;margin:0 0 16px}
 </style>
 </head>
 <body>
+<div style="background-color: #f4f0e8; background-image: radial-gradient(1px 1px at 8% 12%, rgba(23,21,15,0.22), transparent), radial-gradient(1px 1px at 23% 34%, rgba(23,21,15,0.22), transparent), radial-gradient(1px 1px at 38% 8%, rgba(23,21,15,0.22), transparent), radial-gradient(1px 1px at 54% 61%, rgba(23,21,15,0.22), transparent), radial-gradient(1px 1px at 71% 22%, rgba(23,21,15,0.22), transparent), radial-gradient(1px 1px at 85% 47%, rgba(23,21,15,0.22), transparent), radial-gradient(1px 1px at 92% 5%, rgba(23,21,15,0.22), transparent), radial-gradient(1px 1px at 14% 78%, rgba(23,21,15,0.22), transparent), radial-gradient(1px 1px at 47% 89%, rgba(23,21,15,0.22), transparent), radial-gradient(1px 1px at 66% 73%, rgba(23,21,15,0.22), transparent), radial-gradient(1.5px 1.5px at 90% 80%, rgba(138,90,35,0.35), transparent), radial-gradient(1.5px 1.5px at 5% 50%, rgba(138,90,35,0.35), transparent), radial-gradient(1.5px 1.5px at 43% 18%, rgba(138,90,35,0.35), transparent); background-size: 100% 1000px; color: #17150f; font-family: 'Space Grotesk', system-ui, sans-serif">
+<div style="border-bottom: 1px solid rgba(23,21,15,0.10); background: rgba(244,240,232,0.92)">
+<div style="max-width: 1200px; margin: 0 auto; padding: 8px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px">
+<a href="#" style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 13px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; color: #8a5a23; padding: 12px 0">Orion Forecast</a>
+<div style="display: flex; flex-wrap: nowrap; align-items: center; gap: 24px; overflow-x: auto; max-width: 100%; white-space: nowrap">
+<a href="#video" style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; color: #5e584c; padding: 14px 0">Video</a>
+<a href="#schedule" style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; color: #5e584c; padding: 14px 0">Schedule</a>
+<a href="#premium" style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; color: #5e584c; padding: 14px 0">Premium</a>
+<a href="#channels" style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; color: #5e584c; padding: 14px 0">Channels</a>
+<div style="display: flex; align-items: center">
+<a href="https://x.com/OrionForecast" aria-label="X" style="width: 40px; height: 44px; display: flex; align-items: center; justify-content: center; color: #5e584c"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.264 5.638L18.244 2.25Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"></path></svg></a>
+<a href="https://www.youtube.com/@OrionForecast" aria-label="YouTube" style="width: 40px; height: 44px; display: flex; align-items: center; justify-content: center; color: #5e584c"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path></svg></a>
+<a href="https://orionforecast.substack.com" aria-label="Substack" style="width: 40px; height: 44px; display: flex; align-items: center; justify-content: center; color: #5e584c"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"></path></svg></a>
+</div>
+</div>
+</div>
+</div>
 
-<!-- LEGAL MODAL -->
-<div class="modal-overlay" id="legalModal">
+<div id="video" style="max-width: 1040px; margin: 0 auto; padding: 72px 24px 88px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 22px">
+<div style="display: flex; align-items: center; gap: 16px; font-family: 'Space Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: #8a5a23"><span style="width: 40px; height: 1px; background: #b98e5a"></span>Astro Finance &amp; Market Analysis<span style="width: 40px; height: 1px; background: #b98e5a"></span></div>
+<h1 style="margin: 0; font-family: 'Space Mono', ui-monospace, monospace; font-weight: 700; font-size: clamp(48px, 8vw, 96px); line-height: 0.9; letter-spacing: -0.02em">ORION <span style="color: #8a5a23">FORECAST</span></h1>
+<p style="margin: 0 0 18px; font-family: 'Space Mono', ui-monospace, monospace; font-size: 14px; letter-spacing: 0.34em; text-transform: uppercase; color: #5e584c">Where the cosmos meets the market</p>
+<video controls preload="metadata" playsinline poster="assets/orion-intro-poster.jpg" aria-label="What Orion Forecast offers" style="width: 100%; aspect-ratio: 16 / 9; display: block; background: #0d0b1e; border: 1px solid rgba(23,21,15,0.22)"><source src="assets/orion-intro.mp4" type="video/mp4"></source></video>
+<p style="margin: 14px 0 0; max-width: 560px; font-size: 16px; line-height: 1.8; color: #5e584c">We are traders, analysts and researchers in the market using esoteric techniques.</p>
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 14px">
+<a href="https://orionforecast.substack.com" style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; text-decoration: none; color: #fbf8f2; background: #8a5a23; padding: 16px 32px">Read the Analyses</a>
+<a href="#channels" style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; text-decoration: none; color: #17150f; border: 1px solid rgba(23,21,15,0.22); padding: 15px 32px">Explore the Channels</a>
+</div>
+</div>
+
+<div id="schedule" style="background: #ece6da; border-top: 1px solid rgba(23,21,15,0.10); border-bottom: 1px solid rgba(23,21,15,0.10)">
+<div style="max-width: 1120px; margin: 0 auto; padding: 96px 24px; display: flex; flex-direction: column; gap: 44px">
+<div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px">
+<div style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: #8a5a23">Every week</div>
+<h2 style="margin: 0; font-weight: 600; font-size: clamp(30px, 4vw, 44px); line-height: 1.1">What we post, and when.</h2>
+<p style="margin: 0; max-width: 520px; font-size: 16px; line-height: 1.8; color: #5e584c">A steady rhythm, so you always know when to check in.</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: stretch; gap: 20px">
+<div style="flex: 1.4 1 260px; min-width: 0; box-sizing: border-box; border: 1px solid #b98e5a; background: rgba(138,90,35,0.07); padding: 32px 28px; display: flex; flex-direction: column; gap: 14px; text-align: left">
+<span style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 15px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #8a5a23">Monday</span>
+<span style="font-size: 28px; font-weight: 600; line-height: 1.2">The week’s outlook</span>
+<span style="font-size: 15px; line-height: 1.7; color: #5e584c">Every Monday we share our outlook for the week ahead.</span>
+
+</div>
+<div style="flex: 1 1 260px; min-width: 0; box-sizing: border-box; border: 1px solid rgba(23,21,15,0.22); background: #fbf8f2; padding: 32px 28px; display: flex; flex-direction: column; gap: 14px; text-align: left">
+<span style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #8a5a23">During the week</span>
+<span style="font-size: 22px; font-weight: 600; line-height: 1.2">Updates</span>
+<span style="font-size: 15px; line-height: 1.7; color: #5e584c">We follow up with updates on X as the week unfolds.</span>
+<span style="display: inline-flex; align-items: center; gap: 8px; font-family: 'Space Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #17150f"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.264 5.638L18.244 2.25Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"></path></svg>On X</span>
+</div>
+<div style="flex: 1 1 260px; min-width: 0; box-sizing: border-box; border: 1px solid rgba(23,21,15,0.22); background: #fbf8f2; padding: 32px 28px; display: flex; flex-direction: column; gap: 14px; text-align: left">
+<span style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #8a5a23">Regularly</span>
+<span style="font-size: 22px; font-weight: 600; line-height: 1.2">Educational content</span>
+<span style="font-size: 15px; line-height: 1.7; color: #5e584c">Posts that explain the tools and techniques behind our analysis.</span>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="premium" style="padding: 104px 24px">
+<div style="max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 40px">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 14px">
+<div style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: #8a5a23">Premium membership</div>
+<h2 style="margin: 0; font-weight: 600; font-size: clamp(30px, 4vw, 44px); line-height: 1.1; text-wrap: balance">Premium members join us in a private Discord.</h2>
+<p style="margin: 0; max-width: 560px; font-size: 16px; line-height: 1.8; color: #5e584c">Plus the premium articles, setups and full forecasts that stay off the public channels.</p>
+</div>
+<div style="width: 100%; box-sizing: border-box; border: 1px solid #b98e5a; background: rgba(138,90,35,0.07); padding: 40px 36px; display: flex; flex-direction: column; align-items: center; gap: 28px">
+<div style="width: 100%; box-sizing: border-box; background: #fbf8f2; border: 1px solid #b98e5a; padding: 28px; display: flex; flex-wrap: wrap; align-items: center; gap: 20px 28px; text-align: left">
+<span style="width: 72px; height: 72px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; background: #8a5a23; color: #fbf8f2"><svg aria-hidden="true" width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"></path></svg></span>
+<div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a5a23">Members only</span>
+<span style="font-size: 24px; font-weight: 600">Private Discord with Orion Forecast</span>
+<span style="font-size: 16px; line-height: 1.7; color: #5e584c">Talk with us directly, ask questions and follow our work as it happens, together with the other premium members.</span>
+</div>
+</div>
+<div style="width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 1px; background: rgba(23,21,15,0.10)">
+<div style="background: #fbf8f2; padding: 24px 22px; display: flex; flex-direction: column; gap: 10px; text-align: left">
+<span style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 13px; letter-spacing: 0.06em; color: #8a5a23">◈ Premium articles</span>
+<span style="font-size: 15px; line-height: 1.6; color: #5e584c">Articles written only for premium members.</span>
+</div>
+<div style="background: #fbf8f2; padding: 24px 22px; display: flex; flex-direction: column; gap: 10px; text-align: left">
+<span style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 13px; letter-spacing: 0.06em; color: #8a5a23">◈ High-probability setups</span>
+<span style="font-size: 15px; line-height: 1.6; color: #5e584c">Our higher-probability setups, shared with members only.</span>
+</div>
+<div style="background: #fbf8f2; padding: 24px 22px; display: flex; flex-direction: column; gap: 10px; text-align: left">
+<span style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 13px; letter-spacing: 0.06em; color: #8a5a23">◈ Full Forecast</span>
+<span style="font-size: 15px; line-height: 1.6; color: #5e584c">The complete monthly forecast for BTC, EUR/USD, ES and Gold.</span>
+</div>
+<div style="background: #fbf8f2; padding: 24px 22px; display: flex; flex-direction: column; gap: 10px; text-align: left">
+<span style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 13px; letter-spacing: 0.06em; color: #8a5a23">◈ Advanced Topics</span>
+<span style="font-size: 15px; line-height: 1.6; color: #5e584c">The deeper research behind the tools we use.</span>
+</div>
+<div style="background: #fbf8f2; padding: 24px 22px; display: flex; flex-direction: column; gap: 10px; text-align: left">
+<span style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 13px; letter-spacing: 0.06em; color: #8a5a23">◈ Full Archive</span>
+<span style="font-size: 15px; line-height: 1.6; color: #5e584c">Every premium article, back to the first issue.</span>
+</div>
+<div style="background: #fbf8f2; padding: 24px 22px; display: flex; flex-direction: column; gap: 10px; text-align: left">
+<span style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 13px; letter-spacing: 0.06em; color: #8a5a23">◈ Early Access</span>
+<span style="font-size: 15px; line-height: 1.6; color: #5e584c">New analyses before they go public.</span>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 16px">
+<div style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 28px; color: #8a5a23">$40<span style="font-size: 14px; color: #5e584c"> / month</span></div>
+<div style="font-size: 15px; color: #5e584c">or $400 / year — save $80</div>
+<a href="https://orionforecast.substack.com" style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; text-decoration: none; color: #fbf8f2; background: #8a5a23; padding: 16px 32px">Become a Premium Member</a>
+</div>
+</div>
+</div>
+</div>
+
+<div id="channels" style="background: #ece6da; border-top: 1px solid rgba(23,21,15,0.10)">
+<div style="max-width: 1040px; margin: 0 auto; padding: 96px 24px; display: flex; flex-direction: column; gap: 44px">
+<div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px">
+<div style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: #8a5a23">Where to find us</div>
+<h2 style="margin: 0; font-weight: 600; font-size: clamp(30px, 4vw, 44px); line-height: 1.1">Three channels. One method.</h2>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 1px; background: rgba(23,21,15,0.10)">
+<a href="https://x.com/OrionForecast" style="background: #fbf8f2; padding: 36px 28px; display: flex; flex-direction: column; gap: 16px; text-decoration: none; color: #17150f">
+<span style="display: flex; align-items: center; gap: 10px; font-family: 'Space Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a5a23"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.264 5.638L18.244 2.25Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"></path></svg>X — @OrionForecast</span>
+<span style="font-size: 20px; font-weight: 600">Real-time updates</span>
+<span style="font-size: 15px; line-height: 1.7; color: #5e584c">Quick observations and analysis over just a few assets.</span>
+</a>
+<a href="https://www.youtube.com/@OrionForecast" style="background: #fbf8f2; padding: 36px 28px; display: flex; flex-direction: column; gap: 16px; text-decoration: none; color: #17150f">
+<span style="display: flex; align-items: center; gap: 10px; font-family: 'Space Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a5a23"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path></svg>YouTube — @OrionForecast</span>
+<span style="font-size: 20px; font-weight: 600">In-depth video analysis</span>
+<span style="font-size: 15px; line-height: 1.7; color: #5e584c">Videos where we go more in depth on the topics that we share on X and Substack.</span>
+</a>
+<a href="https://orionforecast.substack.com" style="background: #fbf8f2; padding: 36px 28px; display: flex; flex-direction: column; gap: 16px; text-decoration: none; color: #17150f">
+<span style="display: flex; align-items: center; gap: 10px; font-family: 'Space Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #8a5a23"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"></path></svg>Substack — Newsletter</span>
+<span style="font-size: 20px; font-weight: 600">Written analyses &amp; reports</span>
+<span style="font-size: 15px; line-height: 1.7; color: #5e584c">Topics, analysis and reports over the assets that we follow, with more for premium members.</span>
+</a>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding-top: 16px">
+<span style="font-size: 16px; color: #5e584c">Questions? Collaborations? We read everything.</span>
+<a href="mailto:orionforecast@gmail.com" style="display: flex; align-items: center; gap: 10px; font-family: 'Space Mono', ui-monospace, monospace; font-size: 15px; color: #8a5a23; padding: 10px 0"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"></path></svg>orionforecast@gmail.com</a>
+</div>
+</div>
+</div>
+
+<div style="border-top: 1px solid rgba(23,21,15,0.10)">
+<div style="max-width: 1200px; margin: 0 auto; padding: 28px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<span style="font-family: 'Space Mono', ui-monospace, monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #8a5a23">Orion Forecast</span>
+<span style="font-size: 13px; color: #5e584c">For informational purposes only. Not financial advice. <a href="#" onclick="openLegal(); return false;" style="color: #8a5a23">Full disclaimer</a></span>
+</div>
+</div>
+</div>
+
+<div class="modal-overlay" id="legalModal" role="dialog" aria-modal="true" aria-labelledby="legalTitle">
   <div class="modal-box">
     <button class="modal-close" onclick="closeLegal()">✕ Close</button>
-    <p class="modal-title">Orion Forecast — Legal & Disclaimer</p>
+    <p class="modal-title" id="legalTitle">Orion Forecast — Legal &amp; Disclaimer</p>
     <div class="modal-content">
       <p>Non-Advisory Clause — It is important to state that we are not financial advisors. The knowledge provided is for entertainment purposes only. It should not be taken as a directive for your trading or investment actions.</p>
       <p>Educational Purpose — Be aware that all trading strategies, insights, and content presented on all forms of media associated with Orion Research are strictly for educational purposes. Our aim is to improve your understanding of the markets and trading theories, practices and concepts within the markets — but in no way to give you any advice.</p>
@@ -657,165 +193,6 @@
   </div>
 </div>
 
-<!-- NAV -->
-<nav>
-  <a href="#" class="nav-logo">Orion Forecast</a>
-  <ul class="nav-links">
-    <li><a href="#channels">Channels</a></li>
-    <li><a href="#premium">Premium</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#" onclick="openLegal(); return false;">Legal</a></li>
-  </ul>
-  <div class="nav-socials">
-    <a href="https://x.com/OrionForecast" target="_blank" rel="noopener" class="nav-social-link" aria-label="X">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.264 5.638L18.244 2.25Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg>
-    </a>
-    <a href="https://www.youtube.com/@OrionForecast" target="_blank" rel="noopener" class="nav-social-link" aria-label="YouTube">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-    </a>
-    <a href="https://orionforecast.substack.com" target="_blank" rel="noopener" class="nav-social-link" aria-label="Substack">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
-    </a>
-  </div>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-eyebrow">Astro Finance & Market Analysis</div>
-  <h1 class="hero-title">ORION<br><span>FORECAST</span></h1>
-  <p class="hero-subtitle-word">Where the cosmos meets the market</p>
-  <p class="hero-desc">We are traders, analysts and researchers in the market using esoteric techniques.</p>
-  <div class="hero-ctas">
-    <a href="https://orionforecast.substack.com" target="_blank" rel="noopener" class="btn-primary">Read the Analyses</a>
-    <a href="#channels" class="btn-secondary">Explore the Channels</a>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- CHANNELS -->
-<section id="channels">
-  <div class="channels-header reveal">
-    <p class="section-label">Where to find us</p>
-    <h2 class="section-title">Three channels. One method.</h2>
-    <p class="section-sub">In-depth analyses, weekly videos and real-time updates. Pick the format that suits you.</p>
-  </div>
-
-  <div class="channels-grid reveal">
-
-    <!-- X -->
-    <a href="https://x.com/OrionForecast" target="_blank" rel="noopener" class="channel-card">
-      <div class="channel-icon">
-        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.264 5.638L18.244 2.25Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg>
-      </div>
-      <p class="channel-platform">X — @OrionForecast</p>
-      <p class="channel-title">Real-time updates</p>
-      <p class="channel-desc">Quick observations and analysis over just a few assets.</p>
-      <span class="channel-cta">Follow on X</span>
-    </a>
-
-    <!-- YouTube -->
-    <a href="https://www.youtube.com/@OrionForecast" target="_blank" rel="noopener" class="channel-card">
-      <div class="channel-icon">
-        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-      </div>
-      <p class="channel-platform">YouTube — @OrionForecast</p>
-      <p class="channel-title">In-depth video analysis</p>
-      <p class="channel-desc">Videos where we go more in depth on the topics that we share on X and Substack.</p>
-      <span class="channel-cta">Watch the videos</span>
-    </a>
-
-    <!-- Substack -->
-    <a href="https://orionforecast.substack.com" target="_blank" rel="noopener" class="channel-card">
-      <div class="channel-icon">
-        <svg viewBox="0 0 24 24"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
-      </div>
-      <p class="channel-platform">Substack — Newsletter</p>
-      <p class="channel-title">Written analyses & reports</p>
-      <p class="channel-desc">Topics, analysis and reports over the assets that we follow, with more stuff for premium members.</p>
-      <span class="channel-cta">Subscribe to the newsletter</span>
-    </a>
-
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- PREMIUM -->
-<section id="premium">
-  <div class="premium-inner reveal">
-    <p class="section-label">Premium Content</p>
-    <h2 class="section-title">Full forecasts & advanced topics<br>for premium members.</h2>
-
-    <div class="premium-box">
-      <span class="premium-badge">Substack Premium</span>
-      <p class="premium-title">Go beyond the public analyses</p>
-      <p class="premium-desc">Premium members on Substack get exclusive access to our forecasts and advanced research — the content that goes deeper than anything we publish publicly.</p>
-
-      <div class="premium-features">
-        <div class="premium-feature">
-          <p class="premium-feature-title">◈ Full Forecast</p>
-        </div>
-        <div class="premium-feature">
-          <p class="premium-feature-title">◈ Advanced Topics</p>
-        </div>
-        <div class="premium-feature">
-          <p class="premium-feature-title">◈ Full Archive</p>
-        </div>
-        <div class="premium-feature">
-          <p class="premium-feature-title">◈ Early Access</p>
-        </div>
-      </div>
-
-      <a href="https://orionforecast.substack.com" target="_blank" rel="noopener" class="btn-primary">Become a Premium Member</a>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- CONTACT -->
-<section id="contact">
-  <div class="contact-inner reveal">
-    <p class="section-label">Get in touch</p>
-    <h2 class="section-title">Questions? Collaborations?</h2>
-    <p class="contact-sub">For inquiries, feedback or collaboration proposals, reach out anytime. We read everything.</p>
-    <a href="mailto:orionforecast@gmail.com" class="contact-email">
-      <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
-      orionforecast@gmail.com
-    </a>
-  </div>
-</section>
-
-<!-- DISCLAIMER -->
-<section id="disclaimer">
-  <div class="disclaimer-inner reveal">
-    <p class="section-label">Informational use only</p>
-    <p class="disclaimer-text">All content published by Orion Forecast is strictly for informational and research purposes. This is not financial advice. Astro finance is an analytical discipline based on historical correlations — not a guarantee of future performance. Users assume full responsibility for their own decisions.</p>
-    <button class="disclaimer-link" onclick="openLegal()">Read the Full Disclaimer</button>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">Orion Forecast</div>
-  <div class="footer-socials">
-    <a href="https://x.com/OrionForecast" target="_blank" rel="noopener" class="footer-social" aria-label="X">
-      <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.264 5.638L18.244 2.25Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg>
-    </a>
-    <a href="https://www.youtube.com/@OrionForecast" target="_blank" rel="noopener" class="footer-social" aria-label="YouTube">
-      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-    </a>
-    <a href="https://orionforecast.substack.com" target="_blank" rel="noopener" class="footer-social" aria-label="Substack">
-      <svg viewBox="0 0 24 24"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
-    </a>
-    <a href="mailto:orionforecast@gmail.com" class="footer-social" aria-label="Email">
-      <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
-    </a>
-  </div>
-  <p class="footer-copy">© 2025 Orion Forecast. For informational purposes only.</p>
-</footer>
-
 <script>
   function openLegal() {
     document.getElementById('legalModal').classList.add('active');
@@ -825,17 +202,12 @@
     document.getElementById('legalModal').classList.remove('active');
     document.body.style.overflow = '';
   }
-  document.getElementById('legalModal').addEventListener('click', function(e) {
+  document.getElementById('legalModal').addEventListener('click', function (e) {
     if (e.target === this) closeLegal();
   });
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(el => {
-      if (el.isIntersecting) el.target.classList.add('visible');
-    });
-  }, { threshold: 0.08 });
-
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeLegal();
+  });
 </script>
 </body>
 </html>
